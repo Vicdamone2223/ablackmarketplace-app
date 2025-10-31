@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Opaque white system bars + dark (black) icons -->
+  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
+    <!-- Status bar -->
+    <item name="android:statusBarColor">@android:color/white</item>
+    <item name="android:windowLightStatusBar">true</item>
+    <item name="android:enforceStatusBarContrast">false</item>
+
+    <!-- Navigation (gesture) bar -->
+    <item name="android:navigationBarColor">@android:color/white</item>
+    <item name="android:windowLightNavigationBar">true</item>
+    <item name="android:enforceNavigationBarContrast">false</item>
+
+    <!-- Make sure bars are not translucent -->
+    <item name="android:windowTranslucentStatus">false</item>
+    <item name="android:windowTranslucentNavigation">false</item>
+  </style>
+</resources>
