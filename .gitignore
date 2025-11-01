@@ -1,25 +1,104 @@
+# -------------------------------------
 # Logs
-logs
+# -------------------------------------
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+debug.log
 
-node_modules
-dist
-dist-ssr
-*.local
+# -------------------------------------
+# Node / Vite / React
+# -------------------------------------
+node_modules/
+dist/
+dist-ssr/
+build/
+.cache/
+.vite/
 
-# Editor directories and files
-.vscode/*
+# Env files
+.env
+.env.*
+!.env.example
+
+# -------------------------------------
+# Editor / OS
+# -------------------------------------
+.vscode/
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
+Thumbs.db
+*.swp
+*.swo
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
--e "\nios_distribution.*\n*.p12\n*.pem\n*.cer\n*.csr" 
+
+# -------------------------------------
+# iOS / Xcode / Capacitor
+# -------------------------------------
+ios/App/build/
+ios/App/Pods/
+ios/build/
+ios/DerivedData/
+ios/App/App.xcworkspace/
+ios/App/xcuserdata/
+ios/App/xcshareddata/
+ios/App/*.xcuserstate
+ios/App/*.xcuserdatad
+*.xcuserstate
+
+# -------------------------------------
+# Android / Gradle (if you add Android later)
+# -------------------------------------
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+
+# -------------------------------------
+# Certificates / Keys / Provisioning (VERY IMPORTANT)
+# -------------------------------------
+# your previously leaked ones + all common cert/key types
+ios_distribution.*
+*.p8
+*.pem
+*.p12
+*.cer
+*.csr
+*.key
+*.mobileprovision
+*.der
+*.jks
+*.keystore
+
+# Fastlane / Appflow build artifacts
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# -------------------------------------
+# Supabase (avoid leaking service keys & build artifacts)
+# -------------------------------------
+supabase/.temp/
+supabase/.output/
+supabase/functions/.temp/
+supabase/functions/.build/
+supabase/functions/node_modules/
+supabase/config.json
+
+# -------------------------------------
+# Misc
+# -------------------------------------
+coverage/
+*.tgz
+*.zip
+*.tar
+*.gz
