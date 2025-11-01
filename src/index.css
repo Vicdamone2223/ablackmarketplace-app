@@ -5,3 +5,14 @@
 /* Force light UI app-wide */
 :root { color-scheme: light; }
 html, body, #root { height: 100%; background: #fff; color: #000; }
+
+/* --- iOS Safari: prevent auto-zoom on form fields (<16px triggers zoom) --- */
+html { -webkit-text-size-adjust: 100%; }
+
+/* Only applies on iOS/WebKit — safe everywhere else */
+@supports (-webkit-touch-callout: none) {
+  input, select, textarea, button {
+    font-size: 16px !important;  /* <= key fix */
+    line-height: 1.25rem;        /* keep line-height tidy */
+  }
+}

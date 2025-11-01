@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FaSearch, FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabaseClient";
-
-// NEW: pull in context so we can request permission & cache coords once
 import { useLocationCtx } from "../context/LocationContext";
 
 const SearchSection = ({ category, city, setCategory, setCity }) => {
@@ -14,21 +12,17 @@ const SearchSection = ({ category, city, setCategory, setCity }) => {
 
   const { ensurePermission, status } = useLocationCtx();
 
-  // Fetch category suggestions
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (!category) return setSuggestions([]);
-
       const { data: catData } = await supabase
         .from("categories")
         .select("name")
         .ilike("name", `%${category}%`);
-
       const { data: bizData } = await supabase
         .from("businesses")
         .select("name")
         .ilike("name", `%${category}%`);
-
       const combined = [
         ...(catData || []).map((c) => c.name),
         ...(bizData || []).map((b) => b.name),
@@ -38,24 +32,28 @@ const SearchSection = ({ category, city, setCategory, setCity }) => {
     fetchSuggestions();
   }, [category]);
 
-  // City autocomplete
   useEffect(() => {
     const fetchCitySuggestions = async () => {
       if (!citySearchInput) return setCitySuggestions([]);
-
       const { data } = await supabase
         .from("businesses")
         .select("city")
         .ilike("city", `%${citySearchInput}%`);
-
       const uniqueCities = [
         ...new Set((data || []).map((b) => b.city).filter(Boolean)),
       ].sort();
-
       setCitySuggestions(uniqueCities);
     };
     fetchCitySuggestions();
   }, [citySearchInput]);
+
+  // Optional helper — when the input loses focus, ensure the viewport
+  // is comfortably reset (no effect if the page wasn't scrolled).
+  const handleBlur = () => {
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  };
 
   return (
     <div className="bg-white text-black rounded-2xl p-4 shadow-sm border border-black/10">
@@ -72,10 +70,12 @@ const SearchSection = ({ category, city, setCategory, setCity }) => {
           </button>
           <input
             type="text"
-            className="w-full bg-transparent outline-none text-sm text-black placeholder-black/50"
+            className="w-full bg-transparent outline-none text-base text-black placeholder-black/50"
             placeholder="Search businesses or categories"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
+            onBlur={handleBlur}
+            enterKeyHint="search"
             aria-label="Search businesses or categories"
           />
         </div>
@@ -101,7 +101,7 @@ const SearchSection = ({ category, city, setCategory, setCity }) => {
           <FaMapMarkerAlt className="text-black/70 mr-2" />
           <input
             type="text"
-            className="w-full bg-transparent outline-none text-sm text-black placeholder-black/50"
+            className="w-full bg-transparent outline-none text-base text-black placeholder-black/50"
             placeholder="Search by city (e.g. Atlanta)"
             value={citySearchInput}
             onChange={(e) => {
@@ -109,6 +109,8 @@ const SearchSection = ({ category, city, setCategory, setCity }) => {
               setCitySearchInput(v);
               if (v !== city) setCity("");
             }}
+            onBlur={handleBlur}
+            enterKeyHint="search"
             aria-label="Search by city"
           />
         </div>
@@ -132,14 +134,14 @@ const SearchSection = ({ category, city, setCategory, setCity }) => {
         )}
       </div>
 
-      {/* OPTIONAL tiny helper: lets users enable location once */}
+      {/* Location permission helper */}
       <div className="pt-3">
         <button
           type="button"
           onClick={ensurePermission}
           className="text-xs text-blue-600 hover:underline"
         >
-          {status === 'granted' ? 'Location enabled ✔' : 'Use my location'}
+          {status === "granted" ? "Location enabled ✔" : "Use my location"}
         </button>
       </div>
     </div>
