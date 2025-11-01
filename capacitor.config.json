@@ -2,5 +2,24 @@
   "appId": "com.ablackmarketplace.app",
   "appName": "A Black Marketplace",
   "webDir": "dist",
-  "backgroundColor": "#111827"
+  "bundledWebRuntime": false,
+  "backgroundColor": "#111827",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "backgroundColor": "#111827"
+    },
+    "Geolocation": {
+      "enabled": true
+    }
+  },
+  "ios": {
+    "plist": {
+      "NSLocationWhenInUseUsageDescription": "A Black Marketplace uses your location to find nearby Black-owned businesses around you."
+    }
+  },
+  "cordova": {}
 }

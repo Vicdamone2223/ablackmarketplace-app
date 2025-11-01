@@ -3,10 +3,13 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
 
-// (Optional) if you added those error popups earlier, delete them now.
+// NEW: provide user location to the whole app
+import { LocationProvider } from "./context/LocationContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <LocationProvider>
+      <App />
+    </LocationProvider>
   </React.StrictMode>
 );

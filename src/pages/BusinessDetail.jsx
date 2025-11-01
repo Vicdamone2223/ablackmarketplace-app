@@ -5,6 +5,9 @@ import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import supabase from '../supabaseClient';
 
+// NEW: location context (provides coords + status = 'granted' | 'denied' | 'idle')
+import { useLocationCtx } from '../context/LocationContext';
+
 const Stars = ({ value = 0 }) => {
   const v = Math.max(0, Math.min(5, Number(value) || 0));
   return (
@@ -24,6 +27,31 @@ const fmtDate = (ts) => {
 const placeholderAvatar = (nameOrEmail) =>
   `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(nameOrEmail || 'User')}`;
 
+// Small helper (Haversine) — kept local so we don't change your helpers
+function milesBetween(a, b) {
+  if (!a || !b) return null;
+  const toRad = (x) => (x * Math.PI) / 180;
+  const R = 6371e3; // meters
+  const φ1 = toRad(a.lat);
+  const φ2 = toRad(b.lat);
+  const Δφ = toRad(b.lat - a.lat);
+  const Δλ = toRad(b.lng - a.lng);
+
+  const sinΔφ = Math.sin(Δφ / 2);
+  const sinΔλ = Math.sin(Δλ / 2);
+
+  const c =
+    2 *
+    Math.atan2(
+      Math.sqrt(sinΔφ * sinΔφ + Math.cos(φ1) * Math.cos(φ2) * sinΔλ * sinΔλ),
+      Math.sqrt(1 - (sinΔφ * sinΔφ + Math.cos(φ1) * Math.cos(φ2) * sinΔλ * sinΔλ))
+    );
+
+  const meters = R * c;
+  const miles = meters / 1609.344;
+  return miles;
+}
+
 export default function BusinessDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -35,6 +63,9 @@ export default function BusinessDetail() {
     return saved ? JSON.parse(saved) : [];
   });
   const [reviews, setReviews] = useState([]);
+
+  // NEW: current user location
+  const { coords } = useLocationCtx(); // { lat, lng } | null
 
   const isAdmin = localStorage.getItem('is_admin') === 'true';
 
@@ -61,6 +92,7 @@ export default function BusinessDetail() {
     setUser(storedUser);
 
     loadReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const loadReviews = async () => {
@@ -109,6 +141,29 @@ export default function BusinessDetail() {
 
   if (!business) return <div className="p-4">Loading...</div>;
 
+  // Try to read lat/lng from any common field names
+  const bizLat =
+    business.lat ?? business.latitude ?? business.location_lat ?? business.latititude; // (include typos just in case)
+  const bizLng =
+    business.lng ?? business.longitude ?? business.location_lng ?? business.longititude;
+
+  // NEW: compute miles (only if coords + bizLat/Lng exist)
+  let milesAway = null;
+  if (
+    coords?.lat != null &&
+    coords?.lng != null &&
+    typeof bizLat === 'number' &&
+    typeof bizLng === 'number'
+  ) {
+    const m = milesBetween(
+      { lat: coords.lat, lng: coords.lng },
+      { lat: bizLat, lng: bizLng }
+    );
+    if (m != null && Number.isFinite(m)) {
+      milesAway = Math.round(m * 10) / 10; // 1 decimal
+    }
+  }
+
   const images = (business.gallery || []).map((url) => ({
     original: url,
     thumbnail: url,
@@ -152,8 +207,11 @@ export default function BusinessDetail() {
     }
   };
 
+  // Prefer lat/lng deep link if available (more accurate than address search)
   const googleMapsLink =
-    business.street_address && business.city
+    typeof bizLat === 'number' && typeof bizLng === 'number'
+      ? `https://www.google.com/maps/search/?api=1&query=${bizLat},${bizLng}`
+      : business.street_address && business.city
       ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
           `${business.street_address}, ${business.city}`
         )}`
@@ -189,13 +247,22 @@ export default function BusinessDetail() {
           <FaArrowLeft /> Back
         </button>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <p className="text-lg font-semibold">{business.name}</p>
-          {business.category?.name && (
-            <span className="text-xs bg-black/5 text-black px-2 py-1 rounded-full">
-              {business.category.name}
-            </span>
-          )}
+
+          <div className="flex items-center gap-2">
+            {business.category?.name && (
+              <span className="text-xs bg-black/5 text-black px-2 py-1 rounded-full">
+                {business.category.name}
+              </span>
+            )}
+            {/* NEW: show distance if we have it */}
+            {milesAway != null && (
+              <span className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full">
+                {milesAway} mi
+              </span>
+            )}
+          </div>
         </div>
 
         <p className="text-sm text-black/70">{business.description}</p>

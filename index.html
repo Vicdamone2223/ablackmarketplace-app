@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
-    <base href="./" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
     <title>Black Book</title>
 
     <!-- System UI tint -->
@@ -19,7 +21,6 @@
     </style>
     <script>
       (function () {
-        // Read env(safe-area-inset-*) into a hidden probe; if zero, keep fallback
         try {
           const probe = document.createElement('div');
           probe.style.cssText =
@@ -51,6 +52,7 @@
   </head>
   <body class="bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
     <div id="root"></div>
-    <script type="module" src="./src/main.jsx"></script>
+    <!-- IMPORTANT: absolute-from-root path for dev -->
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

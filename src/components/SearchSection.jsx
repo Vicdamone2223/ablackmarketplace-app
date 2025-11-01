@@ -1,14 +1,18 @@
-// src/components/SearchSection.jsx
 import React, { useState, useEffect } from "react";
 import { FaSearch, FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabaseClient";
+
+// NEW: pull in context so we can request permission & cache coords once
+import { useLocationCtx } from "../context/LocationContext";
 
 const SearchSection = ({ category, city, setCategory, setCity }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [citySuggestions, setCitySuggestions] = useState([]);
   const [citySearchInput, setCitySearchInput] = useState("");
   const navigate = useNavigate();
+
+  const { ensurePermission, status } = useLocationCtx();
 
   // Fetch category suggestions
   useEffect(() => {
@@ -126,6 +130,17 @@ const SearchSection = ({ category, city, setCategory, setCity }) => {
             ))}
           </ul>
         )}
+      </div>
+
+      {/* OPTIONAL tiny helper: lets users enable location once */}
+      <div className="pt-3">
+        <button
+          type="button"
+          onClick={ensurePermission}
+          className="text-xs text-blue-600 hover:underline"
+        >
+          {status === 'granted' ? 'Location enabled ✔' : 'Use my location'}
+        </button>
       </div>
     </div>
   );
