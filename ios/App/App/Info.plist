@@ -4,54 +4,54 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
-	
+
 	<key>CFBundleDisplayName</key>
 	<string>A Black Marketplace</string>
-	
+
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	
+
 	<key>CFBundleIdentifier</key>
 	<string>com.ablackmarketplace.app</string>
-	
+
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-	
+
 	<key>CFBundleName</key>
 	<string>A Black Marketplace</string>
-	
+
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	
-	<!-- Marketing version (visible to users, e.g. 1.0.0) -->
+
+	<!-- Marketing version (shown to users) -->
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
 
-	<!-- Build number (must increase for every new upload to App Store Connect) -->
+	<!-- Build number: must increase every App Store upload -->
 	<key>CFBundleVersion</key>
-	<string>2</string>
-	
+	<string>3</string>
+
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	
+
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
-	
+
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-	
+
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
-	
+
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	
+
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -59,18 +59,18 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	
+
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 
-	<!-- ✅ Add required iOS location usage descriptions -->
+	<!-- Location usage descriptions required by Apple -->
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app uses your location to show nearby Black-owned businesses.</string>
-	
+
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Your location helps us find and display businesses near you.</string>
-	
-	<!-- Optional but recommended for clarity -->
+
+	<!-- Clarify that no restricted encryption is used -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 </dict>
