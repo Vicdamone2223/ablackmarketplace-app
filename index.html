@@ -50,8 +50,52 @@
       })();
     </script>
   </head>
+
   <body class="bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
     <div id="root"></div>
+
+    <!-- BEGIN: panic overlay to catch runtime errors on device -->
+    <style>
+      #panic {
+        position: fixed; inset: 0; background: #111; color: #f55;
+        font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        padding: 16px; z-index: 999999; display: none; overflow:auto;
+      }
+      #panic b { color: #fff; }
+    </style>
+    <div id="panic"></div>
+    <script>
+      (function () {
+        const box = document.getElementById('panic');
+        function show(msg, stack) {
+          box.style.display = 'block';
+          box.innerHTML =
+            '<b>💥 Runtime error</b><br><br>' +
+            (msg ? (String(msg).replace(/</g, '&lt;') + '<br><br>') : '') +
+            (stack
+              ? '<pre style="white-space:pre-wrap;">' +
+                String(stack).replace(/</g, '&lt;') +
+                '</pre>'
+              : '');
+        }
+        window.addEventListener('error', function (e) {
+          show(e.message || e.error, e.error && e.error.stack);
+        });
+        window.addEventListener('unhandledrejection', function (e) {
+          const r = e.reason || {};
+          show(r.message || String(r), r.stack);
+        });
+        // sanity marker so we know correct bundle loaded
+        fetch('version.txt')
+          .then((r) => r.text())
+          .then((t) => {
+            console.log('[ABM] bundle version', t);
+          })
+          .catch(() => {});
+      })();
+    </script>
+    <!-- END: panic overlay -->
+
     <!-- IMPORTANT: absolute-from-root path for dev -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
