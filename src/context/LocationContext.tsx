@@ -69,9 +69,9 @@ export function LocationProvider({ children }: { children: ReactNode }) {
       }
       const req = await Geolocation.requestPermissions();
       const ok =
-  (req as any).location === "granted" || (req as any).location === "limited";
-setStatus(ok ? ((req as any).location as Status) : "denied");
-
+        (req as any).location === "granted" ||
+        (req as any).location === "limited";
+      setStatus(ok ? ((req as any).location as Status) : "denied");
       return ok;
     } catch {
       setStatus("unknown");
@@ -83,7 +83,7 @@ setStatus(ok ? ((req as any).location as Status) : "denied");
     const pos = await Geolocation.getCurrentPosition({
       enableHighAccuracy: true,
       timeout: 8000,
-      maximumAge: 0, // <- critical for iOS to avoid stale cache
+      maximumAge: 0, // force fresh on iOS
     });
     const c = {
       lat: pos.coords.latitude,
@@ -113,7 +113,7 @@ setStatus(ok ? ((req as any).location as Status) : "denied");
           await freshFix();
         } else {
           setCoords(cached);
-          // fire-and-forget silent refresh to improve accuracy
+          // fire-and-forget refresh
           freshFix().catch(() => {});
         }
       } finally {
@@ -130,21 +130,23 @@ setStatus(ok ? ((req as any).location as Status) : "denied");
     ensureFresh(0).catch(() => {});
   }, [ensureFresh]);
 
-  // On app resume (foreground), force refresh (fixes iOS half-stale behavior)
+  // On app resume, force refresh — FIX: no nested hook
   useEffect(() => {
-    useEffect(() => {
-  let sub: any;
-  CapApp.addListener("appStateChange", (s) => {
-    if (s.isActive) ensureFresh(0);
-  }).then((listener) => {
-    sub = listener;
-  });
-
-  return () => {
-    if (sub) sub.remove();
-  };
-}, [ensureFresh]);
-
+    let sub: { remove: () => void } | undefined;
+    (async () => {
+      try {
+        sub = await CapApp.addListener("appStateChange", (s) => {
+          if (s?.isActive) ensureFresh(0);
+        });
+      } catch {
+        // no-op (web)
+      }
+    })();
+    return () => {
+      try {
+        sub?.remove();
+      } catch {}
+    };
   }, [ensureFresh]);
 
   return (

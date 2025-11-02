@@ -1,6 +1,6 @@
-# -------------------------------------
-# Logs
-# -------------------------------------
+# =========================================================
+# LOGS
+# =========================================================
 logs/
 *.log
 npm-debug.log*
@@ -10,9 +10,9 @@ pnpm-debug.log*
 lerna-debug.log*
 debug.log
 
-# -------------------------------------
-# Node / Vite / React
-# -------------------------------------
+# =========================================================
+# NODE / VITE / REACT
+# =========================================================
 node_modules/
 dist/
 dist-ssr/
@@ -25,9 +25,9 @@ build/
 .env.*
 !.env.example
 
-# -------------------------------------
-# Editor / OS
-# -------------------------------------
+# =========================================================
+# EDITORS / OS FILES
+# =========================================================
 .vscode/
 !.vscode/extensions.json
 .idea/
@@ -40,32 +40,32 @@ Thumbs.db
 *.njsproj
 *.sln
 
-# -------------------------------------
-# iOS / Xcode / Capacitor
-# -------------------------------------
+# =========================================================
+# iOS / XCODE / CAPACITOR
+# =========================================================
+!ios/                            # ✅ Allow the iOS folder to be committed
 ios/App/build/
 ios/App/Pods/
 ios/build/
 ios/DerivedData/
-ios/App/App.xcworkspace/
 ios/App/xcuserdata/
 ios/App/xcshareddata/
 ios/App/*.xcuserstate
 ios/App/*.xcuserdatad
 *.xcuserstate
 
-# -------------------------------------
-# Android / Gradle (if you add Android later)
-# -------------------------------------
+# =========================================================
+# ANDROID / GRADLE
+# =========================================================
 android/.gradle/
 android/app/build/
 android/build/
 android/local.properties
 
-# -------------------------------------
-# Certificates / Keys / Provisioning (VERY IMPORTANT)
-# -------------------------------------
-# your previously leaked ones + all common cert/key types
+# =========================================================
+# CERTIFICATES / KEYS / PROVISIONING (SENSITIVE)
+# =========================================================
+# These must never be tracked — they can expose your Apple account
 ios_distribution.*
 *.p8
 *.pem
@@ -78,15 +78,17 @@ ios_distribution.*
 *.jks
 *.keystore
 
-# Fastlane / Appflow build artifacts
+# =========================================================
+# FASTLANE / APPFLOW BUILD ARTIFACTS
+# =========================================================
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output/
 
-# -------------------------------------
-# Supabase (avoid leaking service keys & build artifacts)
-# -------------------------------------
+# =========================================================
+# SUPABASE
+# =========================================================
 supabase/.temp/
 supabase/.output/
 supabase/functions/.temp/
@@ -94,9 +96,9 @@ supabase/functions/.build/
 supabase/functions/node_modules/
 supabase/config.json
 
-# -------------------------------------
-# Misc
-# -------------------------------------
+# =========================================================
+# MISCELLANEOUS
+# =========================================================
 coverage/
 *.tgz
 *.zip
