@@ -27,7 +27,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0</string>
 
-	<!-- Build number: must increase every App Store upload -->
+	<!-- Build number: must increase with each App Store upload -->
 	<key>CFBundleVersion</key>
 	<string>4</string>
 
