@@ -29,7 +29,7 @@
 
 	<!-- Build number: must increase with each App Store upload -->
 	<key>CFBundleVersion</key>
-	<string>14</string>
+	<string>15</string>
 
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
