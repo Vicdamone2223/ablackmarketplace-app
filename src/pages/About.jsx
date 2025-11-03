@@ -23,7 +23,7 @@ export default function About() {
         Location is used only to rank results on your device—we don’t store your
         live location. For details, read our{" "}
         <a
-          href="https://ablackmarketplace.com/privacy"
+          href="https://ablackmarketplace.com/privacy-policy"
           className="text-blue-600 underline"
           target="_blank" rel="noreferrer"
         >
