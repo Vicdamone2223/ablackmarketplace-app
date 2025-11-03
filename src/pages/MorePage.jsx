@@ -19,6 +19,21 @@ const MorePage = () => {
         >
           Advertise With Us
         </Link>
+
+        {/* New: About + Contact */}
+        <Link
+          to="/about"
+          className="block w-full border border-black/15 text-center py-3 rounded hover:bg-black/5"
+        >
+          About Us
+        </Link>
+
+        <Link
+          to="/contact"
+          className="block w-full border border-black/15 text-center py-3 rounded hover:bg-black/5"
+        >
+          Contact Us
+        </Link>
       </div>
     </div>
   );

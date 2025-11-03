@@ -23,6 +23,10 @@ import MorePage from './pages/MorePage';
 import SuggestBusinessPage from './pages/SuggestBusinessPage';
 import AdvertiseRequestPage from './pages/AdvertiseRequestPage';
 
+// NEW PAGES
+import About from './pages/About';
+import Contact from './pages/Contact';
+
 import BottomNavBar from './components/BottomNavBar';
 
 const RouterImpl = Capacitor.isNativePlatform() ? HashRouter : BrowserRouter;
@@ -41,8 +45,6 @@ export default function App() {
           await StatusBar.setOverlaysWebView({ overlay: false });
         }
       } catch (err) {
-        // harmless on web/older devices where plugin isn't available
-        // keep a statement in here to satisfy eslint(no-empty)
         if (import.meta.env.DEV) console.debug('[StatusBar] init skipped:', err);
       }
     };
@@ -134,6 +136,10 @@ export default function App() {
           <Route path="/more" element={<MorePage />} />
           <Route path="/suggest" element={<SuggestBusinessPage />} />
           <Route path="/advertise" element={<AdvertiseRequestPage />} />
+
+          {/* NEW routes */}
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
