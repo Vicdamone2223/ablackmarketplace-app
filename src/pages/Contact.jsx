@@ -50,12 +50,13 @@ export default function Contact() {
         </Link>
 
         <a
-          href="https://ablackmarketplace.com/privacy"
-          target="_blank" rel="noreferrer"
-          className="block rounded-2xl border border-black/15 px-4 py-3 text-center"
-        >
-          Privacy Policy
-        </a>
+  href="https://ablackmarketplace.com/privacy-policy"
+  target="_blank" rel="noreferrer"
+  className="block rounded-2xl border border-black/15 px-4 py-3 text-center"
+>
+  Privacy Policy
+</a>
+
       </div>
 
       <p className="text-xs text-black/50 mt-6">
