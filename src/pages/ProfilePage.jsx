@@ -3,6 +3,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import supabase from '../supabaseClient';
 
+// NEW: Capacitor + Camera plugin (used only on native to force Photo Library)
+import { Capacitor } from '@capacitor/core';
+import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
+
 // Flip this to false if you want to disable storage uploads and go URL-only
 const ENABLE_AVATAR_UPLOAD = true;
 
@@ -26,6 +30,7 @@ const ProfilePage = () => {
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [avatarUrlInput, setAvatarUrlInput] = useState('');
 
+  // Web-only hidden file input
   const fileRef = useRef(null);
 
   // Load user/admin + favorites
@@ -112,42 +117,81 @@ const ProfilePage = () => {
     }
   };
 
-  const pickFile = () => fileRef.current?.click();
+  // ---------- Avatar upload helpers ----------
 
+  // Upload any File/Blob to Supabase and set avatar URL
+  const uploadToSupabase = async (blobOrFile, filenameHint = 'avatar.jpg') => {
+    if (!ENABLE_AVATAR_UPLOAD || !user?.email) return;
+
+    const safeEmail = user.email.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path = `${safeEmail}/${Date.now()}-${filenameHint}`.replace(/\s+/g, '_');
+
+    const { error: upErr } = await supabase.storage
+      .from('avatars')
+      .upload(path, blobOrFile);
+
+    if (upErr) {
+      console.error('avatar upload:', upErr);
+      alert(`Avatar upload failed: ${upErr.message}`);
+      return;
+    }
+
+    const { data } = supabase.storage.from('avatars').getPublicUrl(path);
+    setAvatarUrl(data.publicUrl);
+    setAvatarUrlInput(data.publicUrl);
+    alert('Avatar uploaded ✅ — don’t forget to Save Profile');
+  };
+
+  // Web/desktop handler (hidden <input type="file">)
   const onFile = async (e) => {
-    if (!ENABLE_AVATAR_UPLOAD) return;
     try {
       const file = e.target.files?.[0];
-      if (!file || !user?.email) return;
-
-      const safeEmail = user.email.replace(/[^a-zA-Z0-9._-]/g, '_');
-      const path = `${safeEmail}/${Date.now()}-${file.name}`.replace(/\s+/g, '_');
-
-      const { error: upErr } = await supabase.storage
-        .from('avatars')
-        .upload(path, file); // no upsert -> needs only READ + INSERT policies
-
-      if (upErr) {
-        console.error('avatar upload:', upErr);
-        alert(`Avatar upload failed: ${upErr.message}`);
-        return;
-      }
-
-      const { data } = supabase.storage.from('avatars').getPublicUrl(path);
-      setAvatarUrl(data.publicUrl);
-      setAvatarUrlInput(data.publicUrl);
-      alert('Avatar uploaded ✅ — don’t forget to Save Profile');
+      if (!file) return;
+      await uploadToSupabase(file, file.name || 'avatar.jpg');
     } catch (err) {
       console.error(err);
       alert(`Avatar upload failed: ${err.message || err}`);
     }
   };
 
+  // Main entry triggered by "Upload" button
+  const pickImage = async () => {
+    // On native iOS/Android, open Photos only (no camera)
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const photo = await Camera.getPhoto({
+          source: CameraSource.Photos,          // <-- Photo Library only
+          resultType: CameraResultType.Uri,     // get a file/URI we can fetch as Blob
+          quality: 80,
+          allowEditing: false,
+        });
+
+        if (!photo || !photo.webPath) return; // user canceled
+        // Convert the selected photo to a Blob and upload
+        const resp = await fetch(photo.webPath);
+        const blob = await resp.blob();
+        // Try to keep the correct extension if available
+        const name = (photo.path?.split('/').pop() || 'avatar.jpg').replace(/\?.*$/, '');
+        await uploadToSupabase(blob, name);
+      } catch (e) {
+        // user cancelled or plugin error — do nothing
+        if (import.meta.env.DEV) console.debug('Photo pick canceled or failed:', e);
+      }
+      return;
+    }
+
+    // On web/desktop: open the regular file chooser
+    fileRef.current?.click();
+  };
+
+  // ---------- URL-based avatar helpers ----------
+
   const validateImageUrl = (url) => {
     try {
       const u = new URL(url);
       if (!/^https?:$/.test(u.protocol)) return false;
-      if (!/\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(u.pathname)) return true;
+      // Allow any URL; if you want strict extensions, uncomment:
+      // if (!/\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(u.pathname)) return false;
       return true;
     } catch {
       return false;
@@ -166,6 +210,8 @@ const ProfilePage = () => {
     setAvatarUrl(avatarUrlInput.trim());
     alert('Avatar URL set ✅ — click Save Profile to persist it.');
   };
+
+  // ---------- Auth helpers ----------
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -213,14 +259,17 @@ const ProfilePage = () => {
             alt="Avatar"
             className="w-24 h-24 rounded-full object-cover border border-gray-700"
           />
+
           {ENABLE_AVATAR_UPLOAD && (
             <>
               <button
-                onClick={pickFile}
+                onClick={pickImage}
                 className="absolute -bottom-2 -right-2 text-xs bg-black text-white px-2 py-1 rounded"
               >
                 Upload
               </button>
+
+              {/* Web/desktop fallback only (never triggered on native) */}
               <input
                 ref={fileRef}
                 type="file"
