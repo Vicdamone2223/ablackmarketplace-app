@@ -2,76 +2,79 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
 
-	<key>CFBundleDisplayName</key>
-	<string>A Black Marketplace</string>
+  <key>CFBundleDisplayName</key>
+  <string>A Black Marketplace</string>
 
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
+  <key>CFBundleExecutable</key>
+  <string>$(EXECUTABLE_NAME)</string>
 
-	<key>CFBundleIdentifier</key>
-	<string>com.ablackmarketplace.app</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.ablackmarketplace.app</string>
 
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
 
-	<key>CFBundleName</key>
-	<string>A Black Marketplace</string>
+  <key>CFBundleName</key>
+  <string>A Black Marketplace</string>
 
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
 
-	<!-- Marketing version (shown to users) -->
-	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+  <!-- Marketing version (shown to users) -->
+  <key>CFBundleShortVersionString</key>
+  <string>1.0.0</string>
 
-	<!-- Build number: must increase with each App Store upload -->
-	<key>CFBundleVersion</key>
-	<string>18</string>
+  <!-- Build number: must increase every App Store upload -->
+  <key>CFBundleVersion</key>
+  <string>19</string>
 
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
+  <key>LSRequiresIPhoneOS</key>
+  <true/>
 
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+  <key>UILaunchStoryboardName</key>
+  <string>LaunchScreen</string>
 
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
+  <key>UIMainStoryboardFile</key>
+  <string>Main</string>
 
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
+  <key>UIRequiredDeviceCapabilities</key>
+  <array>
+    <string>armv7</string>
+  </array>
 
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
+  <key>UISupportedInterfaceOrientations</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
 
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
+  <key>UISupportedInterfaceOrientations~ipad</key>
+  <array>
+    <string>UIInterfaceOrientationPortrait</string>
+    <string>UIInterfaceOrientationPortraitUpsideDown</string>
+    <string>UIInterfaceOrientationLandscapeLeft</string>
+    <string>UIInterfaceOrientationLandscapeRight</string>
+  </array>
 
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
+  <key>UIViewControllerBasedStatusBarAppearance</key>
+  <true/>
 
-	<!-- Location usage descriptions required by Apple -->
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app uses your location to show nearby Black-owned businesses.</string>
+  <!-- Location usage descriptions required by Apple -->
+  <key>NSLocationWhenInUseUsageDescription</key>
+  <string>This app uses your location to show nearby Black-owned businesses.</string>
+  <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  <string>Your location helps us find and display businesses near you.</string>
 
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Your location helps us find and display businesses near you.</string>
+  <!-- Photo Library usage (needed for choosing an avatar from library) -->
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Allow access to your photo library so you can choose a profile picture.</string>
 
-	<!-- Clarify that no restricted encryption is used -->
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
+  <!-- Clarify that no restricted encryption is used -->
+  <key>ITSAppUsesNonExemptEncryption</key>
+  <false/>
 </dict>
 </plist>
