@@ -3,11 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import supabase from '../supabaseClient';
 
-// NEW: Capacitor + Camera plugin (used only on native to force Photo Library)
+// Capacitor + Camera plugin (native only; opens Photo Library — NOT the camera)
 import { Capacitor } from '@capacitor/core';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 
-// Flip this to false if you want to disable storage uploads and go URL-only
+// Toggle to allow storage uploads (keep true)
 const ENABLE_AVATAR_UPLOAD = true;
 
 // Optional: list your admin email(s)
@@ -160,27 +160,25 @@ const ProfilePage = () => {
     if (Capacitor.isNativePlatform()) {
       try {
         const photo = await Camera.getPhoto({
-          source: CameraSource.Photos,          // <-- Photo Library only
-          resultType: CameraResultType.Uri,     // get a file/URI we can fetch as Blob
+          source: CameraSource.Photos,          // Photo Library only
+          resultType: CameraResultType.Uri,     // get a file/URI to fetch as Blob
           quality: 80,
           allowEditing: false,
         });
 
         if (!photo || !photo.webPath) return; // user canceled
-        // Convert the selected photo to a Blob and upload
         const resp = await fetch(photo.webPath);
         const blob = await resp.blob();
-        // Try to keep the correct extension if available
         const name = (photo.path?.split('/').pop() || 'avatar.jpg').replace(/\?.*$/, '');
         await uploadToSupabase(blob, name);
       } catch (e) {
-        // user cancelled or plugin error — do nothing
+        // user cancelled or plugin error — silently ignore
         if (import.meta.env.DEV) console.debug('Photo pick canceled or failed:', e);
       }
       return;
     }
 
-    // On web/desktop: open the regular file chooser
+    // On web/desktop: open the regular file chooser (Safari may still offer camera here, but this path never runs on native)
     fileRef.current?.click();
   };
 
@@ -190,8 +188,6 @@ const ProfilePage = () => {
     try {
       const u = new URL(url);
       if (!/^https?:$/.test(u.protocol)) return false;
-      // Allow any URL; if you want strict extensions, uncomment:
-      // if (!/\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(u.pathname)) return false;
       return true;
     } catch {
       return false;
@@ -400,6 +396,18 @@ const ProfilePage = () => {
       >
         Log Out
       </button>
+
+      {/* Apple 5.1.1(v) – Account deletion initiation inside the app */}
+      <a
+        href={`mailto:ablackweb@gmail.com?subject=${encodeURIComponent(
+          'Request Account Deletion'
+        )}&body=${encodeURIComponent(
+          `Please delete my account for A Black Marketplace.\n\nEmail: ${user?.email || ''}\n\nI understand this is permanent.`
+        )}`}
+        className="block w-full text-center bg-red-600 text-white text-sm py-2 rounded hover:bg-red-700 mt-2"
+      >
+        Delete Account
+      </a>
     </div>
   );
 };
