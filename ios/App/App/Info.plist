@@ -25,11 +25,11 @@
 
   <!-- Marketing version (shown to users) -->
   <key>CFBundleShortVersionString</key>
-  <string>1.0.0</string>
+  <string>1.0.1</string>
 
   <!-- Build number: must increase every App Store upload -->
   <key>CFBundleVersion</key>
-  <string>22</string>
+  <string>23</string>
 
   <key>LSRequiresIPhoneOS</key>
   <true/>
